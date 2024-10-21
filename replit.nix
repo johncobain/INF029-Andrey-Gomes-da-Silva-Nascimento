@@ -1,5 +1,0 @@
-{pkgs}: {
-  deps = [
-    pkgs.lazygit
-  ];
-}
