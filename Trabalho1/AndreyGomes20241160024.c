@@ -203,10 +203,15 @@ int q4(char *strTexto, char *strBusca, int posicoes[30])
     Número invertido
  */
 
-int q5(int num)
-{
-
-    return num;
+int q5(int num){
+	int numInvert=0;
+	int digit=0;
+	while(num!=0){
+		digit = num%10;
+		numInvert= numInvert*10+digit;
+		num/=10;
+	}
+    return numInvert;
 }
 
 /*
@@ -219,9 +224,16 @@ int q5(int num)
     Quantidade de vezes que número de busca ocorre em número base
  */
 
-int q6(int numerobase, int numerobusca)
-{
-    int qtdOcorrencias;
+int q6(int numerobase, int numerobusca){
+    int qtdOcorrencias=0;
+	int div = 1;
+	while(numerobusca/div!=0)div*=10;
+	while(numerobase!=0){
+		if(numerobase%div==numerobusca){
+			qtdOcorrencias++;
+			numerobase/=div;
+		}else numerobase/=10;
+	}
     return qtdOcorrencias;
 }
 
