@@ -26,17 +26,19 @@
 #include <stdlib.h>
 
 DataQuebrada quebraData(char data[]);
+int isLeap(int year);
+int daysInM(int m, int y);
 
 /*
 ## função utilizada para testes  ##
 
- somar = somar dois valores
-@objetivo
-    Somar dois valores x e y e retonar o resultado da soma
-@entrada
-    dois inteiros x e y
-@saida
-    resultado da soma (x + y)
+  somar = somar dois valores
+  @objetivo
+      Somar dois valores x e y e retonar o resultado da soma
+  @entrada
+      dois inteiros x e y
+  @saida
+      resultado da soma (x + y)
  */
 int somar(int x, int y){
     int soma;
@@ -48,12 +50,12 @@ int somar(int x, int y){
 ## função utilizada para testes  ##
 
  fatorial = fatorial de um número
-@objetivo
-    calcular o fatorial de um número
-@entrada
-    um inteiro x
-@saida
-    fatorial de x -> x!
+  @objetivo
+      calcular o fatorial de um número
+  @entrada
+      um inteiro x
+  @saida
+      fatorial de x -> x!
  */
 int fatorial(int x){ //função utilizada para testes
   int i, fat = 1;
@@ -87,14 +89,22 @@ int teste(int a){
     Não utilizar funções próprias de string (ex: strtok)   
     pode utilizar strlen para pegar o tamanho da string
  */
-int q1(char data[])
-{
+int q1(char data[]){
   int datavalida = 1;
+  // printf("%s\n", data);
 
   //quebrar a string data em strings sDia, sMes, sAno
+  DataQuebrada newData = quebraData(data);
+  if(newData.valido){
+    int day = newData.iDia, month = newData.iMes, year = newData.iAno;
 
+    if(day<1||day>31||month<1||month>12)datavalida=0;
+    if(day==31&&daysInM(month,year)!=31)datavalida=0;
+    if(month==2&&day>29)datavalida=0;
+    if(month==2&&day==29&&daysInM(month,year)!=29)datavalida=0;
 
-  //printf("%s\n", data);
+    // printf("%d %d %d\n", newData.iDia, newData.iMes, newData.iAno);
+  }else datavalida = 0;
 
   if (datavalida)
       return 1;
@@ -226,7 +236,12 @@ DataQuebrada quebraData(char data[]){
 	int i; 
 
 	for (i = 0; data[i] != '/'; i++){
-		sDia[i] = data[i];	
+    if(data[i]>='0'&&data[i]<='9'){
+		  sDia[i] = data[i];	
+    }else{
+      dq.valido = 0;
+      return dq;
+    }
 	}
 	if(i == 1 || i == 2){ // testa se tem 1 ou dois digitos
 		sDia[i] = '\0';  // coloca o barra zero no final
@@ -240,8 +255,13 @@ DataQuebrada quebraData(char data[]){
 	i = 0;
 
 	for (; data[j] != '/'; j++){
-		sMes[i] = data[j];
-		i++;
+    if(data[j]>='0'&&data[j]<='9'){
+		  sMes[i] = data[j];
+		  i++;
+    }else{
+      dq.valido = 0;
+      return dq;
+    }
 	}
 
 	if(i == 1 || i == 2){ // testa se tem 1 ou dois digitos
@@ -256,8 +276,13 @@ DataQuebrada quebraData(char data[]){
 	i = 0;
 	
 	for(; data[j] != '\0'; j++){
-	 	sAno[i] = data[j];
-	 	i++;
+    if(data[j]>='0'&&data[j]<='9'){
+      sAno[i] = data[j];
+      i++;	
+    }else{
+      dq.valido = 0;
+      return dq;
+    }
 	}
 
 	if(i == 2 || i == 4){ // testa se tem 2 ou 4 digitos
@@ -276,3 +301,24 @@ DataQuebrada quebraData(char data[]){
   return dq;
 }
 
+int isLeap(int year){
+    if(year%4 == 0 && year%100 != 0 || year%400 == 0)return 1;
+    else return 0;
+}
+
+int daysInM(int m, int y){
+    if (m == 1 || m == 3 || m == 5 || m == 7 || m == 8 || m == 10 || m == 12)
+        return 31;
+    else {
+        if (m == 4 || m == 6 || m == 9 || m == 11)
+            return 30;
+        else if(m==2) {
+            if (isLeap(y) == 1)
+                return 29;
+            else
+                return 28;
+        }else{
+            return 0;
+        }
+    }
+}

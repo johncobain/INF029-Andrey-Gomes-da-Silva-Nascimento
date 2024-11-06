@@ -29,8 +29,7 @@ void testQ4();
 void testQ5();
 void testQ6();
 
-int main()
-{
+int main(){
     testSomar();
     testFatorial();
     testQ1();
