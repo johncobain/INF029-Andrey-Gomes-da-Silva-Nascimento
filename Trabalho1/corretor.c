@@ -31,18 +31,18 @@ void testQ6();
 
 int main()
 {
-    //testSomar();
-    //testFatorial();
-    //testQ1();
+    testSomar();
+    testFatorial();
+    testQ1();
     testQ2();
-    /*testQ3();
+    testQ3();
     testQ4();
     testQ5();
-    testQ6();*/
+    testQ6();
 }
 
-void testSomar()
-{
+void testSomar(){
+    printf("\nTeste Somar:\n");
     printf("%d\n", somar(3, 4) == 7);
     printf("%d\n", somar(-1, -3) == -4);
     printf("%d\n", somar(-6, 6) == 0);
@@ -53,15 +53,15 @@ void testSomar()
 
 }
 
-void testFatorial()
-{
+void testFatorial(){
+    printf("\nTeste Fatorial:\n");
     printf("%d\n", fatorial(3) == 6);
     printf("%d\n", fatorial(1) == 1);
     printf("%d\n", fatorial(5) == 120);
 }
 
-void testQ1()
-{
+void testQ1(){
+    printf("\nTeste Q1:\n");
     char str[11];
     strcpy(str, "29/02/2015");
     printf("%d\n", q1(str) == 0);
@@ -75,8 +75,8 @@ void testQ1()
     printf("%d\n", q1(str) == 0);
 }
 
-void testQ2()
-{
+void testQ2(){
+    printf("\nTeste Q2:\n");
     char datainicial[11], datafinal[11];
     int qtdDias, qtdMeses, qtdAnos;
     DiasMesesAnos dma;
@@ -128,8 +128,8 @@ void testQ2()
     printf("%d\n", dma.qtdAnos == 0);
 }
 
-void testQ3()
-{
+void testQ3(){
+    printf("\nTeste Q3:\n");
     char str[250];
     strcpy(str, "Renato Lima Novais");
     printf("%d\n", q3(str, 'a', 0) == 3);
@@ -139,8 +139,8 @@ void testQ3()
     printf("%d\n", q3(str, 'L', 0) == 1);
 }
 
-void testQ4()
-{
+void testQ4(){
+    printf("\nTeste Q4:\n");
     char strTexto[250];
     char strBusca[50];
     int posicoes[30];
@@ -172,16 +172,16 @@ void testQ4()
     printf("%d\n", posicoes[5] == 54);
 }
 
-void testQ5()
-{
+void testQ5(){
+    printf("\nTeste Q5:\n");
     printf("%d\n", q5(345) == 543);
     printf("%d\n", q5(78) == 87);
     printf("%d\n", q5(3) == 3);
     printf("%d\n", q5(5430) == 345);
 }
 
-void testQ6()
-{
+void testQ6(){
+    printf("\nTeste Q6:\n");
     printf("%d\n", q6(34567368, 3) == 2);
     printf("%d\n", q6(34567368, 4576) == 0);
     printf("%d\n", q6(3539343, 3) == 4);

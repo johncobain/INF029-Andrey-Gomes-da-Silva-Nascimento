@@ -38,8 +38,7 @@ DataQuebrada quebraData(char data[]);
 @saida
     resultado da soma (x + y)
  */
-int somar(int x, int y)
-{
+int somar(int x, int y){
     int soma;
     soma = x + y;
     return soma;
@@ -56,8 +55,7 @@ int somar(int x, int y)
 @saida
     fatorial de x -> x!
  */
-int fatorial(int x)
-{ //função utilizada para testes
+int fatorial(int x){ //função utilizada para testes
   int i, fat = 1;
     
   for (i = x; i > 1; i--)
@@ -66,8 +64,7 @@ int fatorial(int x)
   return fat;
 }
 
-int teste(int a)
-{
+int teste(int a){
     int val;
     if (a == 2)
         val = 3;
