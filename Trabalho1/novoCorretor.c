@@ -18,8 +18,8 @@ int main(){
     // testQ2(); // 35 testes
     printf("---------q3---------\n");
     testQ3(); // 14 testes
-    // printf("---------q4---------\n");
-    // testQ4(); // 22 testes
+    printf("---------q4---------\n");
+    testQ4(); // 22 testes
     printf("---------q5---------\n");
     testQ5(); // 10 testes
     printf("---------q6---------\n");

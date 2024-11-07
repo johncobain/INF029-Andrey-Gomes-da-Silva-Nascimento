@@ -26,7 +26,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <locale.h>
-#include <windows.h>
+#ifdef _WIN32 
+  #include <windows.h>
+#endif
 
 DataQuebrada quebraData(char data[]);
 int isLeap(int year);
@@ -207,9 +209,34 @@ int q3(char *texto, char c, int isCaseSensitive){
         O retorno da função, n, nesse caso seria 1;
 
  */
-int q4(char *strTexto, char *strBusca, int posicoes[30])
-{
-    int qtdOcorrencias = -1;
+int q4(char *strTexto, char *strBusca, int posicoes[30]){
+    int qtdOcorrencias = 0;
+    int posicao = 0;
+    int len = strlen(strBusca);
+    noSpecials(strTexto);
+    noSpecials(strBusca);
+
+    for(int i = 0; i<strlen(strTexto);){
+      int achou = 0;
+      if(strTexto[i]==strBusca[0]){
+        achou=1;
+        for(int j=i, k=0; k<len; j++,k++){
+          if(strBusca[k]!=strTexto[j])achou=0;
+        }
+        if(achou){
+          qtdOcorrencias++;
+          posicoes[posicao] = i+1;
+          posicao++;
+          posicoes[posicao] = i+len;
+          posicao++;
+
+          i += len;
+        }else{
+          i++;
+        }
+      }
+      if(!achou)i++;
+    }
 
     return qtdOcorrencias;
 }
@@ -246,7 +273,7 @@ int q5(int num){
  */
 
 int q6(int numerobase, int numerobusca){
-    int qtdOcorrencias=0;
+  int qtdOcorrencias=0;
 	int div = 1;
 	while(numerobusca/div!=0)div*=10;
 	while(numerobase!=0){
