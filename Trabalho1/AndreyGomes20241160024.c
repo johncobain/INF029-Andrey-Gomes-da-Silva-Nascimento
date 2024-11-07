@@ -24,10 +24,14 @@
 #include <stdio.h>
 #include "AndreyGomes20241160024.h" // Substitua pelo seu arquivo de header renomeado
 #include <stdlib.h>
+#include <string.h>
+#include <locale.h>
+#include <windows.h>
 
 DataQuebrada quebraData(char data[]);
 int isLeap(int year);
 int daysInM(int m, int y);
+void noSpecials(char *text);
 
 /*
 ## função utilizada para testes  ##
@@ -164,9 +168,26 @@ DiasMesesAnos q2(char datainicial[], char datafinal[])
  @saida
     Um número n >= 0.
  */
-int q3(char *texto, char c, int isCaseSensitive)
-{
-    int qtdOcorrencias = -1;
+int q3(char *texto, char c, int isCaseSensitive){
+  int qtdOcorrencias = 0;
+	char *checkText = malloc(sizeof(char)*strlen(texto));
+
+	strcpy(checkText, texto);
+	//retirar acentos
+  noSpecials(checkText);
+
+	if(isCaseSensitive==0){
+		for(int i=0; checkText[i]!='\0'; i++){
+			if(checkText[i]>='A'&&checkText[i]<='Z'){
+				checkText[i]=checkText[i]+32;
+			}
+		}
+		if(c>='A'&&c<='Z')c=c+32;
+	}
+
+	for(int i = 0; checkText[i]!='\0'; i++){
+		if(checkText[i]==c)qtdOcorrencias++;
+	}
 
     return qtdOcorrencias;
 }
@@ -333,4 +354,51 @@ int daysInM(int m, int y){
             return 0;
         }
     }
+}
+
+void noSpecials(char *text){
+  int i, j=0;
+  #ifdef _WIN32 
+    SetConsoleOutputCP(CP_UTF8);
+  #elif __linux__ 
+	  setlocale(LC_ALL, "Portuguese");
+  #else
+  #endif
+
+  const char *comAcentos[] = {"Ä", "Å", "Á", "Â", "À", "Ã", "ä", "á", "â", "à", "ã",
+                                "É", "Ê", "Ë", "È", "é", "ê", "ë", "è",
+                                "Í", "Î", "Ï", "Ì", "í", "î", "ï", "ì",
+                                "Ö", "Ó", "Ô", "Ò", "Õ", "ö", "ó", "ô", "ò", "õ",
+                                "Ü", "Ú", "Û", "ü", "ú", "û", "ù",
+                                "Ç", "ç"};
+                                
+  const char *semAcentos[] = {"A", "A", "A", "A", "A", "A", "a", "a", "a", "a", "a",
+                              "E", "E", "E", "E", "e", "e", "e", "e",
+                              "I", "I", "I", "I", "i", "i", "i", "i",
+                              "O", "O", "O", "O", "O", "o", "o", "o", "o", "o",
+                              "U", "U", "U", "u", "u", "u", "u",
+                              "C", "c"};
+
+  char buffer[256];
+  buffer[0] = '\0';
+
+  for (int i = 0; i < strlen(text);) {
+    int found = 0;
+    // Tenta substituir cada caractere acentuado por seu equivalente
+    for (int j = 0; j < sizeof(comAcentos) / sizeof(comAcentos[0]); j++) {
+      int len = strlen(comAcentos[j]);
+
+      if (strncmp(&text[i], comAcentos[j], len) == 0) {
+        strcat(buffer, semAcentos[j]);
+        i += len;
+        found = 1;
+        break;
+      }
+    }
+    if (!found) {
+      strncat(buffer, &text[i], 1);
+      i++;
+    }
+  }
+  strcpy(text, buffer);
 }

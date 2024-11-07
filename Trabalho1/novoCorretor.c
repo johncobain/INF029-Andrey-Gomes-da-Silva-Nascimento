@@ -16,8 +16,8 @@ int main(){
     testQ1(); // 10 testes
     // printf("---------q2---------\n");
     // testQ2(); // 35 testes
-    // printf("---------q3---------\n");
-    // testQ3(); // 13 testes
+    printf("---------q3---------\n");
+    testQ3(); // 14 testes
     // printf("---------q4---------\n");
     // testQ4(); // 22 testes
     printf("---------q5---------\n");
@@ -203,8 +203,7 @@ void testQ3(){
     printf("%d\n",q3(str, 'e', 0) == 3);
     printf("%d\n",q3(str, 'E', 1) == 2);
     printf("%d\n",q3(str, 'S', 1) == 0);
-
-    
+    printf("%d\n",q3(str, 'i', 0) == 7);    
 }
 
 void testQ4(){
