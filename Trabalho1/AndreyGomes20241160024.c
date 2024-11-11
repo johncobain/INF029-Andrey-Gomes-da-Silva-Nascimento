@@ -134,30 +134,70 @@ int q1(char data[]){
     4 -> datainicial > datafinal
     Caso o cálculo esteja correto, os atributos qtdDias, qtdMeses e qtdAnos devem ser preenchidos com os valores correspondentes.
  */
-DiasMesesAnos q2(char datainicial[], char datafinal[])
-{
+DiasMesesAnos q2(char datainicial[], char datafinal[]){
+  //calcule os dados e armazene nas três variáveis a seguir
+  DiasMesesAnos dma;
+  if (q1(datainicial) == 0){
+    dma.retorno = 2;
+    return dma;
+  }
+  if (q1(datafinal) == 0){
+    dma.retorno = 3;
+    return dma;
+  }
+  DataQuebrada inicio, fim; 
+  inicio = quebraData(datainicial);
+  fim = quebraData(datafinal);
+  //verifique se a data final não é menor que a data inicial
+  if(fim.iAno < inicio.iAno || ( fim.iAno == inicio.iAno && fim.iMes < inicio.iMes) || ( fim.iAno == inicio.iAno && fim.iMes == inicio.iMes && fim.iDia < inicio.iDia)){
+    dma.retorno = 4;
+    return dma;
+  }
+  //verifique se ambas as datas são bissextas
+  int leapStart = 0, leapEnd = 0;
+  leapStart = isLeap(inicio.iAno);
+  leapEnd = isLeap(fim.iAno);
+  //calcule a distancia entre as datas
 
-    //calcule os dados e armazene nas três variáveis a seguir
-    DiasMesesAnos dma;
+  //anos
+  dma.qtdAnos = fim.iAno - inicio.iAno;
 
-    if (q1(datainicial) == 0){
-      dma.retorno = 2;
-      return dma;
-    }else if (q1(datafinal) == 0){
-      dma.retorno = 3;
-      return dma;
-    }else{
-      //verifique se a data final não é menor que a data inicial
-      
-      //calcule a distancia entre as datas
-
-
-      //se tudo der certo
-      dma.retorno = 1;
-      return dma;
-      
+  //meses
+  dma.qtdMeses = fim.iMes - inicio.iMes;
+  if(dma.qtdMeses != 0){
+    if(dma.qtdMeses < 0){
+      dma.qtdMeses = dma.qtdMeses + 12;
+      dma.qtdAnos--;
     }
-    
+  }
+  //dias
+  dma.qtdDias = fim.iDia - inicio.iDia;
+  if(dma.qtdDias != 0){
+    if(dma.qtdDias < 0){
+      dma.qtdDias = dma.qtdDias + daysInM(inicio.iMes, inicio.iAno);
+      if(leapStart == 1 && inicio.iMes == 2){
+        dma.qtdDias--; //desconsiderar o bissexto nessa linha apenas
+      }
+      dma.qtdMeses--;
+    }
+    if((leapStart == 1 && inicio.iMes <= 2 && inicio.iDia < 29) 
+      && ((fim.iAno==inicio.iAno&&fim.iMes>2)
+        ||(fim.iAno>inicio.iAno&&fim.iMes<2))){
+      dma.qtdDias++;
+    }
+    if((leapEnd == 1 && fim.iMes > 2)){
+      dma.qtdDias++;
+    }
+  }
+
+  // printf("Data inicial: %d/%d/%d\n", inicio.iDia, inicio.iMes, inicio.iAno);
+  // printf("Data final: %d/%d/%d\n", fim.iDia, fim.iMes, fim.iAno);
+  // printf("Diferenca em anos: %d\n", dma.qtdAnos);
+  // printf("Diferenca em meses: %d\n", dma.qtdMeses);
+  // printf("Diferenca em dias: %d\n", dma.qtdDias);
+  //se tudo der certo
+  dma.retorno = 1;
+  return dma;
 }
 
 /*
