@@ -192,9 +192,7 @@ DiasMesesAnos q2(char datainicial[], char datafinal[]){
 
   // printf("Data inicial: %d/%d/%d\n", inicio.iDia, inicio.iMes, inicio.iAno);
   // printf("Data final: %d/%d/%d\n", fim.iDia, fim.iMes, fim.iAno);
-  // printf("Diferenca em anos: %d\n", dma.qtdAnos);
-  // printf("Diferenca em meses: %d\n", dma.qtdMeses);
-  // printf("Diferenca em dias: %d\n", dma.qtdDias);
+  // printf("Diferenca: %d anos, %d meses e %d dias\n", dma.qtdAnos, dma.qtdMeses, dma.qtdDias);
   //se tudo der certo
   dma.retorno = 1;
   return dma;
