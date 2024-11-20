@@ -41,9 +41,9 @@ int main(){
     do{
       valid = 0;
       if(player==0){
-        printf("\nJogador X, informe sua jogada: ");
+        printf("\nJogador X, informe sua jogada\\> ");
       }else{
-        printf("\nJogador O, informe sua jogada: ");
+        printf("\nJogador O, informe sua jogada\\> ");
       }
       gets(choice);
       if(choice[0]>='a' && choice[0]<='c') choice[0]-='a'-'A'; //forçar para maiuscula
@@ -55,10 +55,10 @@ int main(){
           board[i][j] = player;
           valid = 1;
         }else{
-          printf("Jogada inválida!\n");
+          printf("\n\033[1;31mJogada inválida!\033[0m\n");
         }
       }else{
-        printf("Jogada inválida!\n");
+        printf("\n\033[1;31mJogada inválida!\033[0m\n");
       }
     }while(valid==0);
 
