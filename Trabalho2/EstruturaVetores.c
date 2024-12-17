@@ -4,7 +4,13 @@
 
 #include "EstruturaVetores.h"
 
-int vetorPrincipal[TAM];
+
+typedef struct pos{
+    int *arr;
+    int size;
+}Pos;
+
+Pos *mainArr;
 
 /*
 Objetivo: criar estrutura auxiliar na posição 'posicao'.
@@ -263,8 +269,8 @@ Objetivo: inicializa o programa. deve ser chamado ao inicio do programa
 
 */
 
-void inicializar()
-{
+void inicializar(){
+    mainArr = malloc(sizeof(Pos) * TAM);
 }
 
 /*
