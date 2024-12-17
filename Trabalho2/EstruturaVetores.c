@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #define TAM 10
 
 #include "EstruturaVetores.h"
@@ -7,10 +8,26 @@
 
 typedef struct pos{
     int *arr;
+    int lastPos;
     int size;
 }Pos;
 
 Pos *mainArr;
+
+
+/*
+Objetivo: inicializa o programa. deve ser chamado ao inicio do programa 
+
+*/
+void inicializar(){
+    mainArr = malloc(sizeof(Pos) * TAM);
+    // inicializar com NULL
+    for(int i = 0; i < TAM; i++){
+        mainArr[i].arr = NULL;
+        mainArr[i].lastPos = 0;
+        mainArr[i].size = 0;
+    }
+}
 
 /*
 Objetivo: criar estrutura auxiliar na posição 'posicao'.
@@ -50,37 +67,26 @@ Rertono (int)
     POSICAO_INVALIDA - Posição inválida para estrutura auxiliar
 CONSTANTES
 */
-int inserirNumeroEmEstrutura(int posicao, int valor)
-{
-    int retorno = 0;
-    int existeEstruturaAuxiliar = 0;
-    int temEspaco = 0;
-    int posicao_invalida = 0;
+int inserirNumeroEmEstrutura(int pos, int val){
+    int isPosCreated = false;
+    int isFull = false;
 
-    if (posicao_invalida)
-        retorno = POSICAO_INVALIDA;
-    else
-    {
-        // testar se existe a estrutura auxiliar
-        if (existeEstruturaAuxiliar)
-        {
-            if (temEspaco)
-            {
-                //insere
-                retorno = SUCESSO;
-            }
-            else
-            {
-                retorno = SEM_ESPACO;
-            }
-        }
-        else
-        {
-            retorno = SEM_ESTRUTURA_AUXILIAR;
-        }
-    }
+    // testar se a posicao eh valida
+    int isInvalidPosition = pos<=0 || pos>TAM;
+    if (isInvalidPosition) return POSICAO_INVALIDA;
 
-    return retorno;
+    // testar se existe a estrutura auxiliar
+    if (mainArr[pos-1].arr != NULL) isPosCreated = true;
+    if (!isPosCreated)return SEM_ESTRUTURA_AUXILIAR;
+
+    // testar se tem espaço
+    if (mainArr[pos-1].lastPos == mainArr[pos-1].size) isFull = true;
+    if (isFull) return SEM_ESPACO;
+
+    // insere
+    mainArr[pos-1].arr[mainArr[pos-1].lastPos] = val;
+    mainArr[pos-1].lastPos++;
+    return SUCESSO;
 }
 
 /*
@@ -262,15 +268,6 @@ Retorno
 */
 void destruirListaEncadeadaComCabecote(No **inicio)
 {
-}
-
-/*
-Objetivo: inicializa o programa. deve ser chamado ao inicio do programa 
-
-*/
-
-void inicializar(){
-    mainArr = malloc(sizeof(Pos) * TAM);
 }
 
 /*
