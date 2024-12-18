@@ -186,6 +186,7 @@ Rertono (int)
     POSICAO_INVALIDA - Posição inválida para estrutura auxiliar
 */
 int getDadosOrdenadosEstruturaAuxiliar(int pos, int vet[]){
+    int aux;
 
     if(ehPosicaoValida(pos)==POSICAO_INVALIDA) return POSICAO_INVALIDA;
 
@@ -198,7 +199,7 @@ int getDadosOrdenadosEstruturaAuxiliar(int pos, int vet[]){
     for(int i = 0; i < mainArr[pos-1].lastPos-1; i++){
         for(int j = i+1; j < mainArr[pos-1].lastPos; j++){
             if(vet[i] > vet[j]){
-                int aux = vet[i];
+                aux = vet[i];
                 vet[i] = vet[j];
                 vet[j] = aux;
             }
@@ -216,11 +217,28 @@ Rertono (int)
     SUCESSO - recuperado com sucesso os valores da estrutura na posição 'posicao'
     TODAS_ESTRUTURAS_AUXILIARES_VAZIAS - todas as estruturas auxiliares estão vazias
 */
-int getDadosDeTodasEstruturasAuxiliares(int vetorAux[])
-{
+int getDadosDeTodasEstruturasAuxiliares(int vet[]){
+    bool isAllEmpty = true;
+    int base = 0;
 
-    int retorno = 0;
-    return retorno;
+    for(int i = 0; i < TAM; i++){
+        if(mainArr[i].arr != NULL && mainArr[i].lastPos != 0){
+            isAllEmpty = false;
+            break;
+        }
+    }
+
+    if(isAllEmpty) return TODAS_ESTRUTURAS_AUXILIARES_VAZIAS;
+
+    for(int i = 0; i < TAM; i++){
+        if(mainArr[i].arr == NULL) continue;
+        for(int j = 0; j < mainArr[i].lastPos; j++){
+            vet[base] = mainArr[i].arr[j];
+            base++;
+        }
+    }
+    
+    return SUCESSO;
 }
 
 /*
@@ -231,11 +249,39 @@ Rertono (int)
     SUCESSO - recuperado com sucesso os valores da estrutura na posição 'posicao'
     TODAS_ESTRUTURAS_AUXILIARES_VAZIAS - todas as estruturas auxiliares estão vazias
 */
-int getDadosOrdenadosDeTodasEstruturasAuxiliares(int vetorAux[])
-{
+int getDadosOrdenadosDeTodasEstruturasAuxiliares(int vet[]){
+    bool isAllEmpty = true;
+    int base = 0, aux;
 
-    int retorno = 0;
-    return retorno;
+    for(int i = 0; i < TAM; i++){
+        if(mainArr[i].arr != NULL && mainArr[i].lastPos != 0){
+            isAllEmpty = false;
+            break;
+        }
+    }
+
+    if(isAllEmpty) return TODAS_ESTRUTURAS_AUXILIARES_VAZIAS;
+
+    for(int i = 0; i < TAM; i++){
+        if(mainArr[i].arr == NULL) continue;
+        for(int j = 0; j < mainArr[i].lastPos; j++){
+            vet[base] = mainArr[i].arr[j];
+            base++;
+        }
+    }
+
+    for(int i = 0; i < base-1; i++){
+        for(int j = i+1; j < base; j++){
+            if(vet[i] > vet[j]){
+                aux = vet[i];
+                vet[i] = vet[j];
+                vet[j] = aux;
+            }
+        }
+    }
+
+
+    return SUCESSO;
 }
 
 /*
@@ -249,11 +295,20 @@ Rertono (int)
     NOVO_TAMANHO_INVALIDO - novo tamanho não pode ser negativo
     SEM_ESPACO_DE_MEMORIA - erro na alocação do novo valor
 */
-int modificarTamanhoEstruturaAuxiliar(int posicao, int novoTamanho)
-{
+int modificarTamanhoEstruturaAuxiliar(int pos, int newSize){
 
-    int retorno = 0;
-    return retorno;
+    if(ehPosicaoValida(pos) == POSICAO_INVALIDA) return POSICAO_INVALIDA;
+    if(mainArr[pos-1].arr == NULL) return SEM_ESTRUTURA_AUXILIAR;
+    if(mainArr[pos-1].size + newSize < 1) return NOVO_TAMANHO_INVALIDO;
+
+    int *temp = realloc(mainArr[pos-1].arr, sizeof(int) * (mainArr[pos-1].size + newSize));
+    if(temp == NULL) return SEM_ESPACO_DE_MEMORIA;
+
+    mainArr[pos-1].arr = temp;
+    mainArr[pos-1].size += newSize;
+    if(mainArr[pos-1].lastPos > mainArr[pos-1].size) mainArr[pos-1].lastPos = mainArr[pos-1].size;
+    
+    return SUCESSO;
 }
 
 /*
@@ -265,12 +320,13 @@ Retorno (int)
     ESTRUTURA_AUXILIAR_VAZIA - estrutura auxiliar vazia
     Um número int > 0 correpondente a quantidade de elementos preenchidos da estrutura
 */
-int getQuantidadeElementosEstruturaAuxiliar(int posicao)
-{
+int getQuantidadeElementosEstruturaAuxiliar(int posicao){
 
-    int retorno = 0;
+    if(ehPosicaoValida(posicao) == POSICAO_INVALIDA) return POSICAO_INVALIDA;
+    if(mainArr[posicao-1].arr == NULL) return SEM_ESTRUTURA_AUXILIAR;
+    if(mainArr[posicao-1].lastPos == 0) return ESTRUTURA_AUXILIAR_VAZIA;
 
-    return retorno;
+    return mainArr[posicao-1].lastPos;
 }
 
 /*
@@ -280,18 +336,51 @@ Retorno (No*)
     NULL, caso não tenha nenhum número nas listas
     No*, ponteiro para o início da lista com cabeçote
 */
-No *montarListaEncadeadaComCabecote()
-{
+No *montarListaEncadeadaComCabecote(){
+    No *list = NULL;
 
-    return NULL;
+    for(int i = 0; i < TAM; i++){
+        if(mainArr[i].arr == NULL) continue;
+        for(int j = 0; j < mainArr[i].lastPos; j++){
+            if(list == NULL){ // inicializa a lista
+                list = malloc(sizeof(No));
+                list->conteudo = mainArr[i].arr[j];
+                list->prox = NULL;
+            }else{
+                No *currentL = list;
+                No *newL = malloc(sizeof(No));
+                if(currentL != NULL){
+                    while(currentL->prox != NULL){
+                        currentL = currentL->prox;
+                    }
+                    newL->conteudo = mainArr[i].arr[j];
+                    newL->prox = NULL;
+                    currentL->prox = newL;
+                }else{
+                    newL->conteudo = mainArr[i].arr[j];
+                    newL->prox = NULL;
+                    list = newL;
+                }
+            }
+
+        }
+    }
+    return list;
 }
 
 /*
 Objetivo: retorna os números da lista enceada com cabeçote armazenando em vetorAux.
 Retorno void
 */
-void getDadosListaEncadeadaComCabecote(No *inicio, int vetorAux[])
-{
+void getDadosListaEncadeadaComCabecote(No *list, int vet[]){
+    No *currentL = list;
+    int i = 0;
+
+    while(currentL != NULL){
+        vet[i] = currentL->conteudo;
+        currentL = currentL->prox;
+        i++;
+    }
 }
 
 /*
@@ -301,8 +390,15 @@ O ponteiro inicio deve ficar com NULL.
 Retorno 
     void.
 */
-void destruirListaEncadeadaComCabecote(No **inicio)
-{
+void destruirListaEncadeadaComCabecote(No **inicio){
+    No *currentL = *inicio;
+    No *aux;
+    while(currentL != NULL){
+        aux = currentL->prox;
+        free(currentL);
+        currentL = aux;
+    }
+    *inicio = NULL;
 }
 
 /*
