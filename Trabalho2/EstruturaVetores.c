@@ -15,6 +15,10 @@ typedef struct pos{
 Pos *mainArr;
 
 
+// se posição é um valor válido {entre 1 e 10}
+int ehPosicaoValida(int pos){
+    return (pos < 1 || pos > 10)? POSICAO_INVALIDA : SUCESSO;
+}
 /*
 Objetivo: inicializa o programa. deve ser chamado ao inicio do programa 
 
@@ -40,22 +44,26 @@ Rertono (int)
     SEM_ESPACO_DE_MEMORIA - Sem espaço de memória
     TAMANHO_INVALIDO - o tamanho deve ser maior ou igual a 1
 */
-int criarEstruturaAuxiliar(int posicao, int tamanho)
-{
-
-    int retorno = 0;
-    // a posicao pode já existir estrutura auxiliar
-    retorno = JA_TEM_ESTRUTURA_AUXILIAR;
+int criarEstruturaAuxiliar(int pos, int size){
     // se posição é um valor válido {entre 1 e 10}
-    retorno = POSICAO_INVALIDA;
-    // o tamanho ser muito grande
-    retorno = SEM_ESPACO_DE_MEMORIA;
-    // o tamanho nao pode ser menor que 1
-    retorno = TAMANHO_INVALIDO;
-    // deu tudo certo, crie
-    retorno = SUCESSO;
+    if (ehPosicaoValida(pos)==POSICAO_INVALIDA) return POSICAO_INVALIDA;
 
-    return retorno;
+    // a posicao pode já existir estrutura auxiliar
+    if (mainArr[pos-1].arr != NULL) return JA_TEM_ESTRUTURA_AUXILIAR;
+    
+    // o tamanho nao pode ser menor que 1 
+    if (size <= 0) return TAMANHO_INVALIDO;
+
+    // deu tudo certo, crie
+    mainArr[pos-1].arr = malloc(sizeof(int) * size);
+    
+    // se o ponteiro for NULL, significa que não tem espaço de memória
+    if (mainArr[pos-1].arr == NULL) return SEM_ESPACO_DE_MEMORIA;
+
+    mainArr[pos-1].lastPos = 0;
+    mainArr[pos-1].size = size;
+
+    return SUCESSO;
 }
 
 /*
@@ -68,12 +76,11 @@ Rertono (int)
 CONSTANTES
 */
 int inserirNumeroEmEstrutura(int pos, int val){
-    int isPosCreated = false;
-    int isFull = false;
+    bool isPosCreated = false;
+    bool isFull = false;
 
     // testar se a posicao eh valida
-    int isInvalidPosition = pos<=0 || pos>TAM;
-    if (isInvalidPosition) return POSICAO_INVALIDA;
+    if(ehPosicaoValida(pos)==POSICAO_INVALIDA) return POSICAO_INVALIDA;
 
     // testar se existe a estrutura auxiliar
     if (mainArr[pos-1].arr != NULL) isPosCreated = true;
@@ -100,10 +107,16 @@ Rertono (int)
     SEM_ESTRUTURA_AUXILIAR - Não tem estrutura auxiliar
     POSICAO_INVALIDA - Posição inválida para estrutura auxiliar
 */
-int excluirNumeroDoFinaldaEstrutura(int posicao)
-{
-    int retorno = SUCESSO;
-    return retorno;
+int excluirNumeroDoFinaldaEstrutura(int pos){
+    if(ehPosicaoValida(pos)==POSICAO_INVALIDA) return POSICAO_INVALIDA;
+    
+    if(mainArr[pos-1].arr == NULL) return SEM_ESTRUTURA_AUXILIAR;
+    
+    if(mainArr[pos-1].lastPos == 0) return ESTRUTURA_AUXILIAR_VAZIA;
+    
+    mainArr[pos-1].lastPos--;
+    
+    return SUCESSO;
 }
 
 /*
@@ -113,31 +126,33 @@ ex: suponha os valores [3, 8, 7, 9,  ,  ] onde deve ser excluido o valor 8. A es
 Obs. Esta é uma exclusão lógica
 Rertono (int)
     SUCESSO - excluido com sucesso 'valor' da estrutura na posição 'posicao'
+    NUMERO_INEXISTENTE - Número não existe
     ESTRUTURA_AUXILIAR_VAZIA - estrutura vazia
     SEM_ESTRUTURA_AUXILIAR - Não tem estrutura auxiliar
-    NUMERO_INEXISTENTE - Número não existe
     POSICAO_INVALIDA - Posição inválida para estrutura auxiliar
 
 */
-int excluirNumeroEspecificoDeEstrutura(int posicao, int valor)
-{
-    int retorno = SUCESSO;
-    return retorno;
-}
+int excluirNumeroEspecificoDeEstrutura(int pos, int val){
+    if(ehPosicaoValida(pos)==POSICAO_INVALIDA) return POSICAO_INVALIDA;
 
-// se posição é um valor válido {entre 1 e 10}
-int ehPosicaoValida(int posicao)
-{
-    int retorno = 0;
-    if (posicao < 1 || posicao > 10)
-    {
-        retorno = POSICAO_INVALIDA;
+    if(mainArr[pos-1].arr == NULL) return SEM_ESTRUTURA_AUXILIAR;
+
+    if(mainArr[pos-1].lastPos == 0) return ESTRUTURA_AUXILIAR_VAZIA;
+
+    for(int i = 0; i < mainArr[pos-1].lastPos; i++){
+        if(mainArr[pos-1].arr[i] == val){
+            for(int j = i; j < mainArr[pos-1].lastPos; j++){
+                mainArr[pos-1].arr[j] = mainArr[pos-1].arr[j+1];
+            }
+            mainArr[pos-1].lastPos--;
+            return SUCESSO;
+        }
     }
-    else
-        retorno = SUCESSO;
-
-    return retorno;
+    
+    return NUMERO_INEXISTENTE;
+    
 }
+
 /*
 Objetivo: retorna os números da estrutura auxiliar da posição 'posicao (1..10)'.
 os números devem ser armazenados em vetorAux
@@ -276,6 +291,13 @@ para poder liberar todos os espaços de memória das estruturas auxiliares.
 
 */
 
-void finalizar()
-{
+void finalizar(){
+    for(int i = 0; i < TAM; i++){
+        if(mainArr[i].arr != NULL){
+            free(mainArr[i].arr);
+            mainArr[i].arr = NULL;
+        }
+    }
+    free(mainArr);
+    mainArr = NULL;
 }
