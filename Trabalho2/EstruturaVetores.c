@@ -162,12 +162,18 @@ Retorno (int)
     SEM_ESTRUTURA_AUXILIAR - Não tem estrutura auxiliar
     POSICAO_INVALIDA - Posição inválida para estrutura auxiliar
 */
-int getDadosEstruturaAuxiliar(int posicao, int vetorAux[])
-{
+int getDadosEstruturaAuxiliar(int pos, int vet[]){
 
-    int retorno = 0;
+    if(ehPosicaoValida(pos)==POSICAO_INVALIDA) return POSICAO_INVALIDA;
 
-    return retorno;
+    if(mainArr[pos-1].arr == NULL) return SEM_ESTRUTURA_AUXILIAR;
+
+    for(int i = 0; i < mainArr[pos-1].lastPos; i++){
+        vet[i] = mainArr[pos-1].arr[i];
+    }
+    
+
+    return SUCESSO;
 }
 
 /*
@@ -179,13 +185,27 @@ Rertono (int)
     SEM_ESTRUTURA_AUXILIAR - Não tem estrutura auxiliar
     POSICAO_INVALIDA - Posição inválida para estrutura auxiliar
 */
-int getDadosOrdenadosEstruturaAuxiliar(int posicao, int vetorAux[])
-{
+int getDadosOrdenadosEstruturaAuxiliar(int pos, int vet[]){
 
-    int retorno = 0;
+    if(ehPosicaoValida(pos)==POSICAO_INVALIDA) return POSICAO_INVALIDA;
 
+    if(mainArr[pos-1].arr == NULL) return SEM_ESTRUTURA_AUXILIAR;
+
+    for(int i = 0; i < mainArr[pos-1].lastPos; i++){
+        vet[i] = mainArr[pos-1].arr[i];
+    }
     
-    return retorno;
+    for(int i = 0; i < mainArr[pos-1].lastPos-1; i++){
+        for(int j = i+1; j < mainArr[pos-1].lastPos; j++){
+            if(vet[i] > vet[j]){
+                int aux = vet[i];
+                vet[i] = vet[j];
+                vet[j] = aux;
+            }
+        }
+    }
+    
+    return SUCESSO;
 }
 
 /*
