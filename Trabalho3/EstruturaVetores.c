@@ -182,19 +182,19 @@ Retorno (int)
     SEM_ESTRUTURA_AUXILIAR - Não tem estrutura auxiliar
     POSICAO_INVALIDA - Posição inválida para estrutura auxiliar
 */
-int getDadosEstruturaAuxiliar(int pos, int vet[]){
+int getDadosEstruturaAuxiliar(int pos, int vet[]) {
+    if (ehPosicaoValida(pos) == POSICAO_INVALIDA) return POSICAO_INVALIDA;
 
-    if(ehPosicaoValida(pos)==POSICAO_INVALIDA) return POSICAO_INVALIDA;
-
-    if(mainArr[pos-1].arr == NULL) return SEM_ESTRUTURA_AUXILIAR;
+    if (mainArr[pos - 1].arr == NULL) return SEM_ESTRUTURA_AUXILIAR;
 
     int numElements = getQuantidadeElementosEstruturaAuxiliar(pos);
-    if(numElements < 0) return ESTRUTURA_AUXILIAR_VAZIA;
-
-    for(int i = 0; i < mainArr[pos-1].lastPos; i++){
-        vet[i] = mainArr[pos-1].arr[i];
+    if (numElements < 0) {
+        return ESTRUTURA_AUXILIAR_VAZIA;
     }
-    
+
+    for (int i = 0; i < mainArr[pos - 1].lastPos; i++) {
+        vet[i] = mainArr[pos - 1].arr[i];
+    }
 
     return SUCESSO;
 }
@@ -424,87 +424,81 @@ void destruirListaEncadeadaComCabecote(No **inicio){
     *inicio = NULL;
 }
 
-int readFile(const char *fileName){
+int readFile(const char *fileName) {
     int index, lastPos, size, val, ret;
     FILE *fp = fopen(fileName, "r");
 
-    if(fp == NULL){
+    if (fp == NULL) {
         printf("Arquivo nao encontrado!\n");
         return 0;
     }
 
-    while(fscanf(fp, "%d %d %d", &index, &lastPos, &size) == 3){
-        if(index <= 0 || index > TAM){
-            printf("Indice invalido\n");
+    while (fscanf(fp, "%d %d %d", &index, &lastPos, &size) == 3) {
+        if (index < 1 || index > TAM) {
+            printf("Indice invalido: %d\n", index);
+            fclose(fp);
+            return 0;
+        }
+        
+        if (size < 0) {
+            printf("Tamanho invalido: %d\n", size);
+            fclose(fp);
+            return 0;
+        }
+         if (lastPos < 0 || lastPos > size) {
+            printf("lastPos invalido: %d\n", lastPos);
             fclose(fp);
             return 0;
         }
 
-        if(size < 0){
-            printf("Tamanho invalido\n");
-            fclose(fp);
-            return 0;
-        }
-
-        if(size > 0){
+        if (size > 0) {
             ret = criarEstruturaAuxiliar(index, size);
-            if(ret != SUCESSO){
+            if (ret != SUCESSO) {
                 printf("Erro ao criar estrutura auxiliar\n");
                 fclose(fp);
                 return 0;
             }
 
-            if(lastPos < 0 || lastPos > size){
-                printf("Posicao invalida\n");
-                fclose(fp);
-                return 0;
-            }
-
-            for(int i = 0; i < lastPos; i++){
-                if(fscanf(fp, "%d", &val) != 1){
+            for (int i = 0; i < lastPos; i++) {
+                if (fscanf(fp, " %d", &val) != 1) {
                     printf("Erro ao ler valor\n");
                     fclose(fp);
                     return 0;
                 }
 
-                if(i<size){
+                if (i < size) { 
                     ret = inserirNumeroEmEstrutura(index, val);
-                    if(ret != SUCESSO){
+                    if (ret != SUCESSO) {
                         printf("Erro ao adicionar elemento na estrutura auxiliar\n");
                         fclose(fp);
                         return 0;
                     }
-
-                }else{
+                } else {
                     printf("lastPos maior que o tamanho da estrutura auxiliar\n");
                     fclose(fp);
                     return 0;
                 }
             }
         }
-        index++;
     }
-
-
-
     fclose(fp);
     return 1;
 }
 
 int saveFile(const char *fileName) {
-    FILE *fp = fopen(fileName, "w"); // Open in "w" mode (write), which overwrites
+    FILE *fp = fopen(fileName, "w");
     if (fp == NULL) {
         printf("Erro ao abrir o arquivo para escrita\n");
-        perror("fopen"); // Add error message for debugging
+        perror("fopen");
         return 0;
     }
 
     for (int i = 0; i < TAM; i++) {
-        fprintf(fp, "%d %d %d ", i, mainArr[i].lastPos, mainArr[i].size);
+        if(i>0)fprintf(fp, "\n");
+        fprintf(fp, "%d %d %d", i + 1, mainArr[i].lastPos, mainArr[i].size);
         for (int j = 0; j < mainArr[i].lastPos; j++) {
-            fprintf(fp, "%d ", mainArr[i].arr[j]);
+            fprintf(fp, " %d", mainArr[i].arr[j]);
         }
-        fprintf(fp, "\n"); // Add newline at the end of each line
     }
 
     fclose(fp);

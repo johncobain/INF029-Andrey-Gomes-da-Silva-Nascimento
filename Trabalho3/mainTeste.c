@@ -58,7 +58,7 @@ void testarArquivoPrimeiraVez(){
     criarEstruturaAuxiliar(posicoes[2], tamanhos[2]);
     inserirNumeroEmEstrutura(posicoes[2], valores[5]);
     inserirNumeroEmEstrutura(posicoes[2], valores[6]);
-    inserirNumeroEmEstrutura(posicoes[2], valores[7]);    
+    inserirNumeroEmEstrutura(posicoes[2], valores[7]);   
 }
 
 void testarArquivoSegundaVez(){
