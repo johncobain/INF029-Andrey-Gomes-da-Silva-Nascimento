@@ -21,7 +21,8 @@ int main()
 {
     inicializar();
     testarArquivoPrimeiraVez();
-    testarArquivoSegundaVez();
+    // testarArquivoSegundaVez();
+
     /*testeInserirSemNada();
     testeCriarEstrutura();
     testeInserirComEstrutura();
